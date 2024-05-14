@@ -1,6 +1,7 @@
 import pandas as pd 
 import re
 from Config import *
+from sklearn.preprocessing import LabelEncoder
 
 
 def get_input_data()->pd.DataFrame:
@@ -11,8 +12,14 @@ def get_input_data()->pd.DataFrame:
     df = pd.concat([df1, df2])
     df[Config.INTERACTION_CONTENT] = df[Config.INTERACTION_CONTENT].values.astype('U')
     df[Config.TICKET_SUMMARY] = df[Config.TICKET_SUMMARY].values.astype('U')
-    df["y"] = df[Config.CLASS_COL]
-    df = df.loc[(df["y"] != '') & (~df["y"].isna()),]
+    for i in Config.TYPE_COLS:
+        df = df.loc[(df[i] != '') & (~df[i].isna()),]
+    y_list = Config.TYPE_COLS
+    encoded_y_list = Config.ENCODED_COLS
+    for i in range(len(y_list)):
+        y = df[y_list[i]]
+        label_encoder = LabelEncoder()
+        df[encoded_y_list[i]] = label_encoder.fit_transform(y)
     return df
 
 def de_duplication(data: pd.DataFrame):
