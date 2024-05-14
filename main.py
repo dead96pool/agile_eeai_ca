@@ -11,19 +11,15 @@ np.random.seed(seed)
 def load_data():
     #load the input data
     df = get_input_data()
-    return  df
+    return df
 
 def preprocess_data(df):
-    # De-duplicate input data
     df =  de_duplication(df)
-    # remove noise in input data
     df = noise_remover(df)
-    # translate data to english
-    # df[Config.TICKET_SUMMARY] = translate_to_en(df[Config.TICKET_SUMMARY].tolist())
     return df
 
 def get_embeddings(df:pd.DataFrame):
-    X = get_tfidf_embd(df)  # get tf-idf embeddings
+    X = get_tfidf_embd(df)
     return X, df
 
 def get_data_object(X: np.ndarray, df: pd.DataFrame):
@@ -38,6 +34,7 @@ if __name__ == '__main__':
     df[Config.INTERACTION_CONTENT] = df[Config.INTERACTION_CONTENT].values.astype('U')
     df[Config.TICKET_SUMMARY] = df[Config.TICKET_SUMMARY].values.astype('U')
     grouped_df = df.groupby(Config.GROUPED)
+    print('Multi-label classification using chaining method')
     for name, group_df in grouped_df:
         print(name)
         X, group_df = get_embeddings(group_df)
