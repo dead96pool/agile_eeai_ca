@@ -1,14 +1,13 @@
 import numpy as np
 import pandas as pd
 from model.base import BaseModel
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report, confusion_matrix
 from numpy import *
 import random
 from skmultilearn.problem_transform import BinaryRelevance
+from sklearn.naive_bayes import GaussianNB
 
 num_folds = 0
-seed = 0
+seed =0
 # Data
 np.random.seed(seed)
 random.seed(seed)
@@ -18,16 +17,16 @@ pd.set_option('display.width', 1000)
 pd.set_option('display.max_colwidth', 200)
 
 
-class RandomForest(BaseModel):
+class GNB(BaseModel):
     def __init__(self,
                  model_name: str,
                  embeddings: np.ndarray,
                  y: np.ndarray) -> None:
-        super(RandomForest, self).__init__()
+        super(GNB, self).__init__()
         self.model_name = model_name
         self.embeddings = embeddings
         self.y = y
-        self.mdl = BinaryRelevance(RandomForestClassifier(n_estimators=1000, random_state=seed, class_weight='balanced_subsample'))
+        self.mdl = BinaryRelevance(GaussianNB())
         self.predictions = None
         self.data_transform()
 
@@ -77,5 +76,7 @@ class RandomForest(BaseModel):
         print(f'Accuracy on Type2 + Type3 + Type4: {accuracy_4:.2f}%')
 
 
+
     def data_transform(self) -> None:
         ...
+
